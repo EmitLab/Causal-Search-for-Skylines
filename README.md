@@ -188,3 +188,24 @@ This script generates the inferred causal graphs using NO-TEARS algorithm. It is
 To run the experiment use the following command:
 
     python -m skylines.experiment.core.graph
+
+
+## Citation
+
+If you use this work, please cite our paper:
+
+**Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation**  
+Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino  
+*Accepted to SIGMOD 2026 · [arXiv:2603.14339](https://arxiv.org/abs/2603.14339)*
+```bibtex
+@misc{mandal2026causalsearchskylinescss,
+      title={Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation}, 
+      author={Pratanu Mandal and Abhinav Gorantla and K. Selçuk Candan and Maria Luisa Sapino},
+      year={2026},
+      eprint={2603.14339},
+      archivePrefix={arXiv},
+      primaryClass={cs.DB},
+      url={https://arxiv.org/abs/2603.14339}
+}
+` ` `
+```
