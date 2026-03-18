@@ -207,5 +207,4 @@ Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino
       primaryClass={cs.DB},
       url={https://arxiv.org/abs/2603.14339}
 }
-` ` `
 ```
