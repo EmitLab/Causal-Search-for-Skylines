@@ -196,15 +196,24 @@ If you use this work, please cite our paper:
 
 **Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation**  
 Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino  
-*Accepted to SIGMOD 2026 · [arXiv:2603.14339](https://arxiv.org/abs/2603.14339)*
+*Accepted to SIGMOD 2026 · [https://dl.acm.org/doi/10.1145/3802026](https://dl.acm.org/doi/10.1145/3802026)*
 ```bibtex
-@misc{mandal2026causalsearchskylinescss,
-      title={Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation}, 
-      author={Pratanu Mandal and Abhinav Gorantla and K. Selçuk Candan and Maria Luisa Sapino},
-      year={2026},
-      eprint={2603.14339},
-      archivePrefix={arXiv},
-      primaryClass={cs.DB},
-      url={https://arxiv.org/abs/2603.14339}
+@article{10.1145/3802026,
+author = {Mandal, Pratanu and Gorantla, Abhinav and Candan, K. Sel\c{c}uk and Sapino, Maria Luisa},
+title = {Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation},
+year = {2026},
+issue_date = {June 2026},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {4},
+number = {3},
+url = {https://doi.org/10.1145/3802026},
+doi = {10.1145/3802026},
+abstract = {Skyline queries are popular and effective tools in multi-criteria decision support as they extract interesting (pareto-optimal) points that help summarize the available data with respect to a given set of preference attributes. Unfortunately, the efficiency of the skyline algorithms depends heavily on the underlying data statistics. In this paper, we argue that the efficiency of the skyline algorithms could be significantly boosted if one could erase any attribute correlations that do not agree with the preference criteria, while preserving (or even boosting) correlations that agree with the user provided criteria. Therefore, we propose a causally-informed selective de-correlation mechanism to enable skyline algorithms to better leverage the pruning opportunities provided by the positively-aligned data distributions, without having to suffer from the mis-alignments. In particular, we show that, given a causal graph that describes the underlying causal structure of the data, one can identify a subset of the attributes that can be used to selectively de-correlate the preference attributes. Importantly, the proposed causal search for skylines (CSS) approach is agnostic to the underlying candidate enumeration and pruning strategies and, therefore, can be leveraged to improve any popular skyline discovery algorithm. Experiments on multiple real and synthetic data sets and for different skyline discovery algorithms show that the proposed causally-informed selective de-correlation technique significantly reduces both the number of dominance checks as well as the overall time needed to locate skyline points.},
+journal = {Proc. ACM Manag. Data},
+month = may,
+articleno = {149},
+numpages = {27},
+keywords = {skyline queries, causal graphs, selective de-correlation, multi-criteria optimization}
 }
 ```
