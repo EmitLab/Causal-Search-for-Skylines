@@ -4,7 +4,7 @@ set -euo pipefail
 # MODE selects which experiment scripts to run:
 #   benchmark - skyline computation experiments, then summarize (default)
 #   gain      - gain computation experiments
-#   graph     - only build the NO-TEARS inferred causal graph cache
+#   graph     - only build the NOTEARS inferred causal graph cache
 #   all       - benchmark, summarize, then gain
 MODE="${MODE:-benchmark}"
 
@@ -35,7 +35,7 @@ run() {
     python -m "$1"
 }
 
-# The NO-TEARS graph cache must exist before running with infer_graph = True
+# The NOTEARS graph cache must exist before running with infer_graph = True
 INFER_GRAPH=$(python -c 'import skylines; print(skylines.infer_graph)')
 if [[ "$MODE" != "graph" && "$INFER_GRAPH" == "True" ]] && [[ -z "$(ls -A graphs 2>/dev/null)" ]]; then
     echo "infer_graph = True and graphs/ is empty: building causal graph cache first"

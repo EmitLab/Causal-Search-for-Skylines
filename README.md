@@ -2,8 +2,6 @@
 
 This repository contains the implementation of Causal Search for Skylines (CSS), as described in our paper submitted to SIGMOD 2026.
 
-
-
 ## File Structure
 
 ### `/skylines/__init__.py`
@@ -23,9 +21,7 @@ Contains all datasets used for experiments.
 Contains implementations of heuristics for finding best conditioning set.
 
 - `algorithm0.py`: Contains implementation of the `ddSkyline` heuristic.
-
 - `algorithm4.py`: Contains implementation of the `gnSkyline` heuristic.
-
 - `algorithm4_leaky.py`: Contains implementation of the `lnSkyline` heuristic.
 
 ### `/skylines/skyline/`
@@ -33,13 +29,9 @@ Contains implementations of heuristics for finding best conditioning set.
 Contains implementations naive and causal versions of all skyline algorithms using in our experimentation.
 
 - `bnl/`: Implementation of naive and causal versions of Block Nested Loop (BNL) algorithm.
-
 - `sfs/`: Implementation of naive and causal versions of Sort-Filter-Skyline (SFS) algorithm.
-
 - `salsa/`: Implementation of naive and causal versions of Sort and Limit Skyline algorithm (SaLSa).
-
 - `dnc/`: Implementation of naive and causal versions of Divide and Conquer (D&C) skyline algorithm.
-
 - `bbs/`: Implementation of naive and causal versions of Branch and Bound Skyline (BBS) algorithm.
 
 ### `/skylines/experiment/core/`
@@ -103,10 +95,12 @@ The causal graph of any dataset defined in our experiments can be interpreted in
 
 The experiments were run using Python 3.12.7 using a conda environment. The process to set up the environment is defined below.
 
+> [!TIP]
+> If using Docker, skip the Miniconda installation and conda environment creation and activation steps below. Docker sets up the environment automatically.
+
 ### Installing Miniconda
 
-Install miniconda from 
-[https://www.anaconda.com/docs/getting-started/miniconda/install](https://www.anaconda.com/docs/getting-started/miniconda/install).
+Install miniconda from [https://www.anaconda.com/docs/getting-started/miniconda/install](https://www.anaconda.com/docs/getting-started/miniconda/install).
 
 ### Creating environment
 
@@ -122,44 +116,31 @@ In order to use the `skyline` conda environment, activate it using the following
 
     conda activate skyline
 
-## How to Run
+## Experiment Setup
 
-### Configure the experiment setup
+The `configs/` folder contains presets for the following experiments:
 
-The experiments are configured through the `skylines/__init__.py` file.
+| Experiment             | Settings varied                                                | Location                                   |
+| ---------------------- | -------------------------------------------------------------- | ------------------------------------------ |
+| Method comparison      | ddSky, gnSky, lnSky, and preference de-correlation             | `configs/200K/`                          |
+| Dataset size           | 50K, 100K, 200K, and 400K tuples                               | `configs/{size}/`                        |
+| Leakage                | (0.6, 0.4), (0.7, 0.3), (0.8, 0.2), (0.9, 0.1), and (1.0, 0.0) | `configs/200K/lnSky {leakage}/`          |
+| Cluster count          | 2–20 clusters                                                 | `configs/200K/clusters/{count}/`         |
+| Causal graph inference | lnSky with NOTEARS-inferred causal graphs                      | `configs/200K/lnSky (0.6, 0.4) NOTEARS/` |
 
-    """ Number of tuples """
-    n_samples = 200_000
+Each experiment includes four presets covering synthetic and real-world datasets with both `Z = P` and `Z != P`. All presets use five runs.
 
-    """ Number of runs for each experiment (to ensure stability) """
-    n_runs = 5
+Unless varied, experiments use 200K tuples and 10 clusters. The dataset-size, cluster-count, and NOTEARS experiments use lnSky with leakage (0.6, 0.4).
 
-    """ Number of clusters """
-    n_bins = 10
+For example, `configs/200K/ddSky/real (Z != P).py` configures skyline computation with ddSky on real-world datasets with `Z != P`, 200K tuples, 10 clusters, and five runs. Each preset begins with a short description of its setup.
 
-    """ Leakage parameter (lambda_open, lambda_blocked) """
-    leakage = (0.6, 0.4)
+To use a preset, copy it to `skylines/__init__.py` and follow the instructions below.
 
-    """ Find conditioning attribute set using data-driven algorithm """
-    data_driven = False
+## Running Manually
 
-    """ Preference attribute set based decorrelation """
-    complete_decorrelation = False
+### Preset selection
 
-    """ Infer causal graph from the data """
-    infer_graph = False
-
-    """ Skip inference of causal graph and best control sets """
-    skip_inference = False
-
-    """ Choose baseline if gain <= 0 """
-    skip_gain_le_zero = False
-
-    """ Experiment type to run (enable only one line below) """
-    # experiment_type = 'Synthetic (Z != P)'
-    # experiment_type = 'Synthetic (Z = P)'
-    # experiment_type = 'Real (Z != P)'
-    # experiment_type = 'Real (Z = P)'
+Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup).
 
 ### Run skyline computation experiments
 
@@ -181,9 +162,9 @@ To run the experiment use the following command:
 
     python -m skylines.experiment.core.gain
 
-### Generate inferred causal graphs using NO-TEARS
+### Generate inferred causal graphs using NOTEARS
 
-This script generates the inferred causal graphs using NO-TEARS algorithm. It is manadatory to run this script to build the cache of causal graphs before using `infer_graph = True`.
+This script generates the inferred causal graphs using NOTEARS algorithm. It is manadatory to run this script to build the cache of causal graphs before using `infer_graph = True`.
 
 To run the experiment use the following command:
 
@@ -193,30 +174,34 @@ To run the experiment use the following command:
 
 The Docker image sets up the `skyline` conda environment from `environment.yml` and runs the experiment configured in `skylines/__init__.py`.
 
-**Note:** The Docker image requires an x86 (`linux/amd64`) platform.
+> [!NOTE]
+> The Docker image requires an x86 (`linux/amd64`) platform.
 
-1. Configure the experiment in `skylines/__init__.py` as described above (uncomment exactly one `experiment_type`). The file is mounted into the container at runtime, so no rebuild is needed after editing it.
+### Preset selection
 
-2. Build the image:
+Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup). The file is mounted into the container at runtime, so no rebuild is needed after changing it.
 
-        docker compose build
+### Build the image
 
-3. Run the experiment:
+    docker compose build
 
-        docker compose run --rm css
+### Run the experiment
+
+    docker compose run --rm css
 
 Use the `MODE` variable to select what to run:
 
 - `benchmark` (default): skyline computation experiments, followed by `summarize`
 - `gain`: gain computation experiments
-- `graph`: build the NO-TEARS inferred causal graph cache
+- `graph`: build the NOTEARS inferred causal graph cache
 - `all`: `benchmark`, `summarize`, then `gain`
 
 For example:
 
     MODE=gain docker compose run --rm css
 
-**Note:** `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
+> [!CAUTION]
+> `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
 
 If `infer_graph = True` and no causal graph cache exists yet, the graph cache is built automatically before the experiment.
 
@@ -228,9 +213,10 @@ All outputs (`out/`, `graphs/`, `timestamp.txt`) are written to `./results` on t
 
 If you use this work, please cite our paper:
 
-**Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation**  
-Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino  
+**Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation**
+Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino
 *Accepted to SIGMOD 2026 · [https://dl.acm.org/doi/10.1145/3802026](https://dl.acm.org/doi/10.1145/3802026)*
+
 ```bibtex
 @article{10.1145/3802026,
 author = {Mandal, Pratanu and Gorantla, Abhinav and Candan, K. Sel\c{c}uk and Sapino, Maria Luisa},
