@@ -95,7 +95,7 @@ The causal graph of any dataset defined in our experiments can be interpreted in
 
 The experiments were run using Python 3.12.7 using a conda environment. The process to set up the environment is defined below.
 
-> [!NOTE]
+> [!TIP]
 > If using Docker, skip the Miniconda installation and conda environment creation and activation steps below. Docker sets up the environment automatically.
 
 ### Installing Miniconda
@@ -138,6 +138,10 @@ To use a preset, copy it to `skylines/__init__.py` and follow the instructions b
 
 ## Running Manually
 
+### Preset selection
+
+Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup).
+
 ### Run skyline computation experiments
 
 These experiments execute skyline queries using both the non-causal version and causal version of the skyline algorithms, and reports both the number of dominance checks and execution time.
@@ -173,13 +177,15 @@ The Docker image sets up the `skyline` conda environment from `environment.yml` 
 > [!NOTE]
 > The Docker image requires an x86 (`linux/amd64`) platform.
 
-1. Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup). The file is mounted into the container at runtime, so no rebuild is needed after changing it.
+### Preset selection
 
-2. Build the image:
+Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup). The file is mounted into the container at runtime, so no rebuild is needed after changing it.
+
+### Build the image
 
     docker compose build
 
-3. Run the experiment:
+### Run the experiment
 
     docker compose run --rm css
 
@@ -194,7 +200,7 @@ For example:
 
     MODE=gain docker compose run --rm css
 
-> [!NOTE]
+> [!CAUTION]
 > `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
 
 If `infer_graph = True` and no causal graph cache exists yet, the graph cache is built automatically before the experiment.
