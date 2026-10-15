@@ -189,6 +189,40 @@ To run the experiment use the following command:
 
     python -m skylines.experiment.core.graph
 
+## Running with Docker
+
+The Docker image sets up the `skyline` conda environment from `environment.yml` and runs the experiment configured in `skylines/__init__.py`.
+
+**Note:** The Docker image requires an x86 (`linux/amd64`) platform.
+
+1. Configure the experiment in `skylines/__init__.py` as described above (uncomment exactly one `experiment_type`). The file is mounted into the container at runtime, so no rebuild is needed after editing it.
+
+2. Build the image:
+
+        docker compose build
+
+3. Run the experiment:
+
+        docker compose run --rm css
+
+Use the `MODE` variable to select what to run:
+
+- `benchmark` (default): skyline computation experiments, followed by `summarize`
+- `gain`: gain computation experiments
+- `graph`: build the NO-TEARS inferred causal graph cache
+- `all`: `benchmark`, `summarize`, then `gain`
+
+For example:
+
+    MODE=gain docker compose run --rm css
+
+**Note:** `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
+
+If `infer_graph = True` and no causal graph cache exists yet, the graph cache is built automatically before the experiment.
+
+The number of BLAS/OpenMP threads defaults to 64 (as in `openblas.sh`) and can be changed with `N_THREADS`, e.g. `N_THREADS=32 docker compose run --rm css`.
+
+All outputs (`out/`, `graphs/`, `timestamp.txt`) are written to `./results` on the host.
 
 ## Citation
 
