@@ -1,0 +1,16 @@
+.git
+.gitignore
+.idea
+.vscode
+**/__pycache__
+**/*.py[cod]
+**/.DS_Store
+venv
+.venv
+results
+out
+graphs
+timestamp.txt
+Dockerfile
+docker-compose.yml
+.dockerignore

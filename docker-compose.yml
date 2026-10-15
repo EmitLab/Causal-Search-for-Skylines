@@ -1,0 +1,18 @@
+services:
+  css:
+    build: .
+    image: css-skylines
+    platform: linux/amd64
+    init: true
+    environment:
+      # benchmark (default) | gain | graph | all
+      MODE: ${MODE:-benchmark}
+      OPENBLAS_NUM_THREADS: ${N_THREADS:-64}
+      BLIS_NUM_THREADS: ${N_THREADS:-64}
+      OMP_NUM_THREADS: ${N_THREADS:-64}
+      MKL_NUM_THREADS: ${N_THREADS:-64}
+    volumes:
+      # Experiment configuration, edited on the host before each run
+      - ./skylines/__init__.py:/app/skylines/__init__.py:ro
+      # Results (out/), causal graph cache (graphs/) and timestamp.txt
+      - ./results:/results
