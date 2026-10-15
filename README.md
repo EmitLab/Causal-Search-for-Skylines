@@ -170,7 +170,8 @@ To run the experiment use the following command:
 
 The Docker image sets up the `skyline` conda environment from `environment.yml` and runs the experiment configured in `skylines/__init__.py`.
 
-**Note:** The Docker image requires an x86 (`linux/amd64`) platform.
+> [!NOTE]
+> The Docker image requires an x86 (`linux/amd64`) platform.
 
 1. Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup). The file is mounted into the container at runtime, so no rebuild is needed after changing it.
 
@@ -193,7 +194,8 @@ For example:
 
     MODE=gain docker compose run --rm css
 
-**Note:** `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
+> [!NOTE]
+> `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
 
 If `infer_graph = True` and no causal graph cache exists yet, the graph cache is built automatically before the experiment.
 
