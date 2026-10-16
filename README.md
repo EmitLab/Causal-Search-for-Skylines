@@ -79,7 +79,7 @@ Run `benchmark.py`, followed immediately by `summarize.py`, for skyline experime
 
 ### Cleanup
 
-Results are retained in `out/<timestamp>/<sample-size>/` (`results/out/` on the host when using Docker). Finish each run and its summarization before starting another: benchmark, gain, and graph runs update `timestamp.txt`, which selects the run to summarize. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. Previous outputs need not be deleted. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
+Results are retained in `out/{timestamp}/{sample-size}/` (`results/out/` on the host when using Docker). Finish each run and its summarization before starting another: benchmark, gain, and graph runs update `timestamp.txt`, which selects the run to summarize. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. Previous outputs need not be deleted. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
 
 <br>
 
