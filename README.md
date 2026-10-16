@@ -146,8 +146,8 @@ The `figures/` folder contains Excel workbooks with experimental results, summar
 
 The following table maps each figure to its configurations. Paths are relative to `configs/`.
 
-| Figure | Experiment | Configurations | `Z != P` | `Z = P` |
-|---|---|---|:---:|:---:|
+| Figure | Experiment | Configurations | Z&nbsp;!=&nbsp;P | Z&nbsp;=&nbsp;P |
+|:---:|---|---|:---:|:---:|
 | 9 | Mean Execution Time | `200K/pref decor/`<br>`200K/ddSky/`<br>`200K/gnSky/`<br>`200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
 | 10 | Mean Gain Computation Time | `200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
 | 11 | Median % Reduction in Execution Time (expected gain > 0) | Same as Figure 9 | ✓ | - |
