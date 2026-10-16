@@ -146,7 +146,7 @@ The `figures/` folder contains Excel workbooks with experimental results, summar
 
 The following table maps each figure to its configurations. Paths are relative to `configs/`.
 
-| Figure | Experiment | Configurations | Z&nbsp;!=&nbsp;P | Z&nbsp;=&nbsp;P |
+| Figure | Experiment | Configurations | Z&nbsp;!&#8288;=&nbsp;P | Z&nbsp;=&nbsp;P |
 |:---:|---|---|:---:|:---:|
 | 9 | Mean Execution Time | `200K/pref decor/`<br>`200K/ddSky/`<br>`200K/gnSky/`<br>`200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
 | 10 | Mean Gain Computation Time | `200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
@@ -184,19 +184,19 @@ Pratanu Mandal, Abhinav Gorantla, K. Selçuk Candan, Maria Luisa Sapino
 
 ```bibtex
 @article{10.1145/3802026,
-author = {Mandal, Pratanu and Gorantla, Abhinav and Candan, K. Sel\c{c}uk and Sapino, Maria Luisa},
-title = {Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation},
-year = {2026},
-issue_date = {June 2026},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-volume = {4},
-number = {3},
-url = {https://doi.org/10.1145/3802026},
-doi = {10.1145/3802026},
-journal = {Proc. ACM Manag. Data},
-month = may,
-articleno = {149},
-numpages = {27}
+    author = {Mandal, Pratanu and Gorantla, Abhinav and Candan, K. Sel\c{c}uk and Sapino, Maria Luisa},
+    title = {Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation},
+    year = {2026},
+    issue_date = {June 2026},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {4},
+    number = {3},
+    url = {https://doi.org/10.1145/3802026},
+    doi = {10.1145/3802026},
+    journal = {Proc. ACM Manag. Data},
+    month = may,
+    articleno = {149},
+    numpages = {27}
 }
 ```
