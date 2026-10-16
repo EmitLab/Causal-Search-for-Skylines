@@ -2,6 +2,8 @@
 
 This repository contains the implementation of Causal Search for Skylines (CSS), as described in our SIGMOD 2026 paper.
 
+<br>
+
 ## File Structure
 
 - `skylines/`: Dataset definitions, algorithms, and experiment code, described below.
@@ -20,6 +22,8 @@ Within `skylines/`:
 
 > [!NOTE]
 > In experiment outputs, `Gain 0` refers to ddSky, `Gain 4` to gnSky, and `Leaky Gain 4` to lnSky. The leakage parameters in `skylines/__init__.py` apply to lnSky.
+
+<br>
 
 ## Causal Graphs
 
@@ -47,6 +51,8 @@ The `effect` map encodes the causal graph as a weighted directed adjacency map: 
 
 ![graph.svg](./graph.svg)
 
+<br>
+
 ## Requirements
 
 The experiments were run with Python 3.12.7 in a conda environment.
@@ -58,6 +64,8 @@ Install [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/inst
 
     conda env create -f environment.yml
     conda activate skyline
+
+<br>
 
 ## Experiment Lifecycle
 
@@ -72,6 +80,8 @@ Run `benchmark.py`, followed immediately by `summarize.py`, for skyline experime
 ### Cleanup
 
 Results are retained in `out/<timestamp>/<sample-size>/` (`results/out/` on the host when using Docker). Finish each run and its summarization before starting another: benchmark, gain, and graph runs update `timestamp.txt`, which selects the run to summarize. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. Previous outputs need not be deleted. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
+
+<br>
 
 ## Experiment Setup
 
@@ -93,6 +103,8 @@ For example, `configs/200K/ddSky/real (Z != P).py` configures skyline computatio
 
 Copy the selected preset to `skylines/__init__.py`, then follow the manual or Docker instructions below.
 
+<br>
+
 ## Running Manually
 
 ### Run skyline computation experiments
@@ -113,6 +125,8 @@ These experiments measure the time required by the proposed heuristics to find a
 For manual runs with `infer_graph = True`, build the causal-graph cache using NOTEARS before running the experiment:
 
     python -m skylines.experiment.core.graph
+
+<br>
 
 ## Running with Docker
 
@@ -145,6 +159,8 @@ The `benchmark` and `all` modes run summarization immediately after the benchmar
 The number of BLAS/OpenMP threads defaults to 64 (as in `openblas.sh`) and can be changed with `N_THREADS`, e.g. `N_THREADS=32 docker compose run --rm css`.
 
 All outputs (`out/`, `graphs/`, `timestamp.txt`) are written to `./results` on the host.
+
+<br>
 
 ## Reproducing the Paper Figures
 
@@ -181,6 +197,8 @@ Open the synthetic or real-world workbook in the corresponding `figures/Figure {
 To update the plots, populate the supporting worksheets with the newly generated experiment results; the `Summary` worksheet aggregates these results. For Figure 10, enter the gain computation results directly into the `Summary` worksheet.
 
 The workbooks also include dominance check results in addition to the execution time plots presented in the paper.
+
+<br>
 
 ## Citation
 
