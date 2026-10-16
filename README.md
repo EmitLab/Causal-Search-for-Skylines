@@ -128,7 +128,7 @@ The `configs/` folder contains presets for the following experiments:
 | Cluster count          | 2–20 clusters                                                 | `configs/200K/clusters/{count}/`         |
 | Causal graph inference | lnSky with NOTEARS-inferred causal graphs                      | `configs/200K/lnSky (0.6, 0.4) NOTEARS/` |
 
-Each experiment includes four presets covering synthetic and real-world datasets with both `Z = P` and `Z != P`. All presets use five runs.
+Presets cover synthetic and real-world datasets. Method comparisons and NOTEARS experiments include both `Z = P` and `Z != P`; the dataset-size, leakage, and cluster-count sweeps use `Z != P`, with convenience duplicates retained at shared settings. All presets use five runs.
 
 Unless varied, experiments use 200K tuples and 10 clusters. The dataset-size, cluster-count, and NOTEARS experiments use lnSky with leakage (0.6, 0.4).
 
@@ -208,6 +208,40 @@ If `infer_graph = True` and no causal graph cache exists yet, the graph cache is
 The number of BLAS/OpenMP threads defaults to 64 (as in `openblas.sh`) and can be changed with `N_THREADS`, e.g. `N_THREADS=32 docker compose run --rm css`.
 
 All outputs (`out/`, `graphs/`, `timestamp.txt`) are written to `./results` on the host.
+
+## Reproducing the Paper Figures
+
+The `figures/` folder contains Excel workbooks with experimental results, summary calculations, and charts for Figures 9–17 in the paper. Each figure directory contains separate workbooks for synthetic and real-world datasets.
+
+The following table maps each figure to its configurations. Paths are relative to `configs/`.
+
+| Figure | Experiment | Configurations | `Z != P` | `Z = P` |
+|---|---|---|:---:|:---:|
+| 9 | Mean Execution Time | `200K/pref decor/`<br>`200K/ddSky/`<br>`200K/gnSky/`<br>`200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
+| 10 | Mean Gain Computation Time | `200K/lnSky (0.6, 0.4)/` | ✓ | ✓ |
+| 11 | Median % Reduction in Execution Time (expected gain > 0) | Same as Figure 9 | ✓ | - |
+| 12 | Median % Reduction in Execution Time (expected gain > 0) | Same as Figure 9 | - | ✓ |
+| 13 | Median % Reduction in Execution Time (expected gain ≤ 0) | Same as Figure 9 | ✓ | ✓ |
+| 14 | Median % Reduction in Execution Time for Different Numbers of Tuples | `{50K,100K,200K,400K}/lnSky (0.6, 0.4)/` | ✓ | - |
+| 15 | Median % Reduction in Execution Time for Different Leakage Parameters | `200K/lnSky (1.0, 0.0)/`<br>`200K/lnSky (0.9, 0.1)/`<br>`200K/lnSky (0.8, 0.2)/`<br>`200K/lnSky (0.7, 0.3)/`<br>`200K/lnSky (0.6, 0.4)/` | ✓ | - |
+| 16 | Median % Reduction in Execution Time for Different Numbers of De-correlation Clusters | `200K/clusters/{2–20}/lnSky (0.6, 0.4)/` | ✓ | - |
+| 17 | Mean Execution Time with Provided and Inferred Causal Graphs | `200K/lnSky (0.6, 0.4)/`<br>`200K/lnSky (0.6, 0.4) NOTEARS/` | ✓ | ✓ |
+
+### Running the experiments
+
+For each configuration listed above, select the synthetic and real-world preset files with the indicated `Z != P` or `Z = P` setting. Run them using the manual or Docker instructions above.
+
+For Figure 10, run the gain-computation script. It computes timings for ddSky, gnSky, and all four lnSky leakage pairs in one execution; the paper plots ddSky, gnSky, and lnSky `(0.6, 0.4)`.
+
+For all other figures, run the skyline benchmark followed immediately by the summarization script. For the NOTEARS configuration in Figure 17, manual execution requires generating the causal-graph cache first. Docker generates it automatically when the cache is empty.
+
+The method-comparison results can be reused across Figures 9, 11, 12, and 13. Positive-gain and negative-gain cases are selected within the Excel workbooks rather than through separate configurations.
+
+### Using the Excel workbooks
+
+Open the synthetic or real-world workbook in the corresponding `figures/Figure N/` directory. Figure 10 contains a `Gain` worksheet. The other workbooks contain a `Summary` worksheet and supporting worksheets organized by method, number of tuples, leakage parameters, number of clusters, or causal-graph source.
+
+The workbooks contain the calculations and charts used to prepare the paper figures. They also include additional results, such as dominance checks, beyond the execution-time plots presented in the paper.
 
 ## Citation
 
