@@ -1,64 +1,23 @@
 # Causal Search for Skylines (CSS): Causally-Informed Selective Data De-Correlation
 
-This repository contains the implementation of Causal Search for Skylines (CSS), as described in our paper submitted to SIGMOD 2026.
+This repository contains the implementation of Causal Search for Skylines (CSS), as described in our SIGMOD 2026 paper.
 
 ## File Structure
 
-### `/skylines/__init__.py`
+All paths below are relative to `skylines/`.
 
-Contains all configurations for the experiment setup.
+- `__init__.py`: Experiment configuration.
+- `dataset/`: Dataset definitions, including causal graphs, preference attribute sets, dominance criteria, and data-generation scripts. `synthetic/` contains synthetic datasets; `real/` contains real-world datasets and augmentation scripts. `real/data/` holds the raw, unaugmented CSV files, with tuples as rows and variables as columns.
+- `heuristic/`: Heuristics for finding the best conditioning set: `algorithm0.py` (`ddSkyline`), `algorithm4.py` (`gnSkyline`), and `algorithm4_leaky.py` (`lnSkyline`).
+- `skyline/`: Naive and causal implementations of Block Nested Loop (`bnl/`), Sort-Filter-Skyline (`sfs/`), Sort and Limit Skyline (`salsa/`), Divide and Conquer (`dnc/`), and Branch and Bound Skyline (`bbs/`).
+- `experiment/core/`: Experiment scripts. `benchmark.py` generates dataset instances and runs skyline experiments; `summarize.py` aggregates the results; `gain.py` compares the time required by the three conditioning-set heuristics.
+- `common/`: Shared code, including experiment definitions in `constants/`, K-Means in `kmeans/`, and utility methods in `utils/`.
 
-### `/skylines/dataset/`
-
-Contains all datasets used for experiments.
-
-- `synthetic/`: Contains data sets for experiment with synthetic causal graphs; including the causal graphs, preference attribute sets, dominance criteria, and scripts to generate the synthetic data.
-- `real/`: Contains data sets for experiments with real-world causal graphs; including the causal graphs, preference attributes sets, dominance criteria, and scripts to generate the (augmented) real-world data.
-- `real/data/`: Contains raw unaugmented data files for real-world datasets in tabular CSV format, where rows represent tuples and columns represent variables.
-
-### `/skylines/heuristic/`
-
-Contains implementations of heuristics for finding best conditioning set.
-
-- `algorithm0.py`: Contains implementation of the `ddSkyline` heuristic.
-- `algorithm4.py`: Contains implementation of the `gnSkyline` heuristic.
-- `algorithm4_leaky.py`: Contains implementation of the `lnSkyline` heuristic.
-
-### `/skylines/skyline/`
-
-Contains implementations naive and causal versions of all skyline algorithms using in our experimentation.
-
-- `bnl/`: Implementation of naive and causal versions of Block Nested Loop (BNL) algorithm.
-- `sfs/`: Implementation of naive and causal versions of Sort-Filter-Skyline (SFS) algorithm.
-- `salsa/`: Implementation of naive and causal versions of Sort and Limit Skyline algorithm (SaLSa).
-- `dnc/`: Implementation of naive and causal versions of Divide and Conquer (D&C) skyline algorithm.
-- `bbs/`: Implementation of naive and causal versions of Branch and Bound Skyline (BBS) algorithm.
-
-### `/skylines/experiment/core/`
-
-Contains the core code for execution of the experiments.
-
-- `benchmark.py`: Creates dataset instances based on the configuration and executes the skyline experiments.
-- `summarize.py`: Summarize the executed skyline experiments for further analysis.
-- `gain.py`: Creates dataset instances and compare the time required to execute `ddSkyline`, `gnSkyline`, and `lnSkyline`.
-
-In all these experiments, `Gain 0` refers to `ddSkyline`, `Gain 4` refers to `gnSkyline`, and `Leaky Gain 4` refers to `lnSkyline`. The leakage parameters defined in `/skylines/__init__.py` will be used by `lnSkyline`.
-
-### `/skylines/common/`
-
-Contains definition of various common boilerplate code.
-
-`/constants`: Defines constants used for the experiments including definition of all experiment sets.
-
-`/kmeans`: Implementation of K-Means algorithm.
-
-`/utils`: Defines various common utility methods.
+In experiment outputs, `Gain 0` refers to `ddSkyline`, `Gain 4` to `gnSkyline`, and `Leaky Gain 4` to `lnSkyline`. The leakage parameters in `skylines/__init__.py` apply to `lnSkyline`.
 
 ## Causal Graphs
 
-As mentioned before, datasets are defined inside `/skylines/dataset/`.
-
-A typical dataset definition looks like the following:
+Datasets are defined in `skylines/dataset/`. A typical definition is:
 
     class XY_C_1(SyntheticDataset):
 
@@ -78,57 +37,35 @@ A typical dataset definition looks like the following:
                             size=size,
                             seed=seed)
 
-The causal graph is encoded using a weighted directed adjacency map, in the following block of code:
-
-    effect={'X': {'C':  1},
-            'Y': {'C': -1}},
-
-What this specifies is variate `C` affects variate `X` with a causal strength of `+1`. Further, variate `C` also affects variate `Y` with a causal strength of `-1`.
-
-A Directed Acyclic Graph (DAG) representation of this structure will be:
+The `effect` map encodes the causal graph as a weighted directed adjacency map: variate `C` affects `X` with causal strength `+1` and `Y` with causal strength `-1`. The corresponding directed acyclic graph (DAG) is:
 
 ![graph.svg](./graph.svg)
 
-The causal graph of any dataset defined in our experiments can be interpreted in the same manner.
-
 ## Requirements
 
-The experiments were run using Python 3.12.7 using a conda environment. The process to set up the environment is defined below.
+The experiments were run with Python 3.12.7 in a conda environment.
 
 > [!TIP]
-> If using Docker, skip the Miniconda installation and conda environment creation and activation steps below. Docker sets up the environment automatically.
+> If using Docker, skip the steps below. Docker sets up the environment automatically.
 
-### Installing Miniconda
-
-Install miniconda from [https://www.anaconda.com/docs/getting-started/miniconda/install](https://www.anaconda.com/docs/getting-started/miniconda/install).
-
-### Creating environment
-
-Create the conda environment based on the provided `environment.yml` file using the following command:
+Install [Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install), then create and activate the `skyline` environment:
 
     conda env create -f environment.yml
-
-This will create a new conda environment name `skyline`.
-
-### Activating conda environment
-
-In order to use the `skyline` conda environment, activate it using the following command:
-
     conda activate skyline
 
 ## Experiment Lifecycle
 
 ### Setup
 
-Prepare the environment as described above and copy the desired preset from `configs/` to `skylines/__init__.py`. Check that the active `experiment_type` and parameter values match the intended experiment. If `infer_graph = True`, generate the required NOTEARS graph cache first; Docker does this automatically when the cache is empty.
+Prepare the environment as described above and select a preset using the [experiment setup instructions](#experiment-setup). Check that the active `experiment_type` and parameter values match the intended experiment. If `infer_graph = True`, generate the required NOTEARS graph cache first; Docker does this automatically when the cache is empty.
 
 ### Execution
 
-Run `benchmark.py`, followed immediately by `summarize.py`, for skyline experiments; run `gain.py` for gain computation experiments. The commands are provided below. Check the terminal for exceptions and confirm that the output contains results for every configured dataset, dominance setting, and repetition, plus the summary workbook after summarization. A run directory alone does not indicate successful completion.
+Run `benchmark.py`, followed immediately by `summarize.py`, for skyline experiments; run `gain.py` for gain computation experiments. Check the terminal for exceptions and confirm that the output contains results for every configured dataset, dominance setting, and repetition, plus the summary workbook after summarization. A run directory alone does not indicate successful completion.
 
 ### Cleanup
 
-Previous results are retained in `out/<timestamp>/<sample-size>/` (`results/out/` on the host when using Docker). No deletion is needed to separate outputs, but finish each run and its summarization before starting another: `summarize.py` reads the run selected by `timestamp.txt`, which benchmark, gain, and graph runs overwrite. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
+Results are retained in `out/<timestamp>/<sample-size>/` (`results/out/` on the host when using Docker). Finish each run and its summarization before starting another: benchmark, gain, and graph runs update `timestamp.txt`, which selects the run to summarize. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. Previous outputs need not be deleted. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
 
 ## Experiment Setup
 
@@ -148,52 +85,35 @@ Unless varied, experiments use 200K tuples and 10 clusters. The dataset-size, cl
 
 For example, `configs/200K/ddSky/real (Z != P).py` configures skyline computation with ddSky on real-world datasets with `Z != P`, 200K tuples, 10 clusters, and five runs. Each preset begins with a short description of its setup.
 
-To use a preset, copy it to `skylines/__init__.py` and follow the instructions below.
+Copy the selected preset to `skylines/__init__.py`, then follow the manual or Docker instructions below.
 
 ## Running Manually
 
-### Preset selection
-
-Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup).
-
 ### Run skyline computation experiments
 
-These experiments execute skyline queries using both the non-causal version and causal version of the skyline algorithms, and reports both the number of dominance checks and execution time.
-
-To run the experiment use the following command:
+These experiments compare non-causal and causal skyline algorithms, recording dominance checks and execution time. Run the benchmark, then summarize its results:
 
     python -m skylines.experiment.core.benchmark
-
-To summarize the experiment results use the following command:
-
     python -m skylines.experiment.core.summarize
 
 ### Run gain computation experiments
 
-These experiments report the time required to find the best possible conditioning attribute set based on the heuristics proposed in the paper.
-
-To run the experiment use the following command:
+These experiments measure the time required by the proposed heuristics to find a conditioning attribute set:
 
     python -m skylines.experiment.core.gain
 
 ### Generate inferred causal graphs using NOTEARS
 
-This script generates the inferred causal graphs using NOTEARS algorithm. It is manadatory to run this script to build the cache of causal graphs before using `infer_graph = True`.
-
-To run the experiment use the following command:
+For manual runs with `infer_graph = True`, build the causal-graph cache using NOTEARS before running the experiment:
 
     python -m skylines.experiment.core.graph
 
 ## Running with Docker
 
-The Docker image sets up the `skyline` conda environment from `environment.yml` and runs the experiment configured in `skylines/__init__.py`.
+The Docker image sets up the `skyline` conda environment from `environment.yml` and runs the experiment configured in `skylines/__init__.py`. This file is mounted at runtime, so changing the preset does not require a rebuild.
 
 > [!NOTE]
 > The Docker image requires an x86 (`linux/amd64`) platform.
-
-### Preset selection
-
-Copy a preset from `configs/` to `skylines/__init__.py` as described in [Experiment Setup](#experiment-setup). The file is mounted into the container at runtime, so no rebuild is needed after changing it.
 
 ### Build the image
 
@@ -214,10 +134,7 @@ For example:
 
     MODE=gain docker compose run --rm css
 
-> [!CAUTION]
-> `benchmark`, `graph` and `gain` each start a new timestamped output directory, and `summarize` reads the latest one. Therefore `summarize` must run right after `benchmark`; the `benchmark` and `all` modes keep this order. If you run `MODE=gain` (or `MODE=graph`) and then try to summarize later, `summarize` will point at the gain (or graph) run instead of the benchmark run.
-
-If `infer_graph = True` and no causal graph cache exists yet, the graph cache is built automatically before the experiment.
+The `benchmark` and `all` modes run summarization immediately after the benchmark, as required by the [experiment lifecycle](#experiment-lifecycle). If `infer_graph = True` and the graph cache is empty, Docker builds it before the experiment.
 
 The number of BLAS/OpenMP threads defaults to 64 (as in `openblas.sh`) and can be changed with `N_THREADS`, e.g. `N_THREADS=32 docker compose run --rm css`.
 
@@ -247,7 +164,7 @@ For each configuration listed above, select the synthetic and real-world preset 
 
 For Figure 10, run the gain-computation script. It computes timings for ddSky, gnSky, and all four lnSky leakage pairs in one execution; the paper plots ddSky, gnSky, and lnSky `(0.6, 0.4)`.
 
-For all other figures, run the skyline benchmark followed immediately by the summarization script. For the NOTEARS configuration in Figure 17, manual execution requires generating the causal-graph cache first. Docker generates it automatically when the cache is empty.
+For all other figures, run the skyline benchmark followed by summarization. The NOTEARS configuration in Figure 17 also requires the graph-cache setup described above.
 
 The method-comparison results can be reused across Figures 9, 11, 12, and 13. Positive-gain and negative-gain cases are selected within the Excel workbooks rather than through separate configurations.
 
@@ -255,7 +172,7 @@ The method-comparison results can be reused across Figures 9, 11, 12, and 13. Po
 
 Open the synthetic or real-world workbook in the corresponding `figures/Figure N/` directory. Figure 10 contains a `Gain` worksheet. The other workbooks contain a `Summary` worksheet and supporting worksheets organized by method, number of tuples, leakage parameters, number of clusters, or causal-graph source.
 
-The workbooks contain the calculations and charts used to prepare the paper figures. They also include additional results, such as dominance checks, beyond the execution-time plots presented in the paper.
+The workbooks also include results beyond the paper's execution-time plots, such as dominance checks.
 
 ## Citation
 
@@ -277,11 +194,9 @@ volume = {4},
 number = {3},
 url = {https://doi.org/10.1145/3802026},
 doi = {10.1145/3802026},
-abstract = {Skyline queries are popular and effective tools in multi-criteria decision support as they extract interesting (pareto-optimal) points that help summarize the available data with respect to a given set of preference attributes. Unfortunately, the efficiency of the skyline algorithms depends heavily on the underlying data statistics. In this paper, we argue that the efficiency of the skyline algorithms could be significantly boosted if one could erase any attribute correlations that do not agree with the preference criteria, while preserving (or even boosting) correlations that agree with the user provided criteria. Therefore, we propose a causally-informed selective de-correlation mechanism to enable skyline algorithms to better leverage the pruning opportunities provided by the positively-aligned data distributions, without having to suffer from the mis-alignments. In particular, we show that, given a causal graph that describes the underlying causal structure of the data, one can identify a subset of the attributes that can be used to selectively de-correlate the preference attributes. Importantly, the proposed causal search for skylines (CSS) approach is agnostic to the underlying candidate enumeration and pruning strategies and, therefore, can be leveraged to improve any popular skyline discovery algorithm. Experiments on multiple real and synthetic data sets and for different skyline discovery algorithms show that the proposed causally-informed selective de-correlation technique significantly reduces both the number of dominance checks as well as the overall time needed to locate skyline points.},
 journal = {Proc. ACM Manag. Data},
 month = may,
 articleno = {149},
-numpages = {27},
-keywords = {skyline queries, causal graphs, selective de-correlation, multi-criteria optimization}
+numpages = {27}
 }
 ```
