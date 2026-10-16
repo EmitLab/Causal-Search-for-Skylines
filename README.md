@@ -8,12 +8,12 @@ All paths below are relative to `skylines/`.
 
 - `__init__.py`: Experiment configuration.
 - `dataset/`: Dataset definitions, including causal graphs, preference attribute sets, dominance criteria, and data-generation scripts. `synthetic/` contains synthetic datasets; `real/` contains real-world datasets and augmentation scripts. `real/data/` holds the raw, unaugmented CSV files, with tuples as rows and variables as columns.
-- `heuristic/`: Heuristics for finding the best conditioning set: `algorithm0.py` (`ddSkyline`), `algorithm4.py` (`gnSkyline`), and `algorithm4_leaky.py` (`lnSkyline`).
+- `heuristic/`: Heuristics for finding the best conditioning set: `algorithm0.py` (ddSky), `algorithm4.py` (gnSky), and `algorithm4_leaky.py` (lnSky).
 - `skyline/`: Naive and causal implementations of Block Nested Loop (`bnl/`), Sort-Filter-Skyline (`sfs/`), Sort and Limit Skyline (`salsa/`), Divide and Conquer (`dnc/`), and Branch and Bound Skyline (`bbs/`).
 - `experiment/core/`: Experiment scripts. `benchmark.py` generates dataset instances and runs skyline experiments; `summarize.py` aggregates the results; `gain.py` compares the time required by the three conditioning-set heuristics.
 - `common/`: Shared code, including experiment definitions in `constants/`, K-Means in `kmeans/`, and utility methods in `utils/`.
 
-In experiment outputs, `Gain 0` refers to `ddSkyline`, `Gain 4` to `gnSkyline`, and `Leaky Gain 4` to `lnSkyline`. The leakage parameters in `skylines/__init__.py` apply to `lnSkyline`.
+In experiment outputs, `Gain 0` refers to ddSky, `Gain 4` to gnSky, and `Leaky Gain 4` to lnSky. The leakage parameters in `skylines/__init__.py` apply to lnSky.
 
 ## Causal Graphs
 
