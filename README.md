@@ -18,7 +18,8 @@ Within `skylines/`:
 - `experiment/core/`: Experiment scripts. `benchmark.py` generates dataset instances and runs skyline experiments; `summarize.py` aggregates the results; `gain.py` compares the time required by the three conditioning-set heuristics.
 - `common/`: Shared code, including experiment definitions in `constants/`, K-Means in `kmeans/`, and utility methods in `utils/`.
 
-In experiment outputs, `Gain 0` refers to ddSky, `Gain 4` to gnSky, and `Leaky Gain 4` to lnSky. The leakage parameters in `skylines/__init__.py` apply to lnSky.
+> [!NOTE]
+> In experiment outputs, `Gain 0` refers to ddSky, `Gain 4` to gnSky, and `Leaky Gain 4` to lnSky. The leakage parameters in `skylines/__init__.py` apply to lnSky.
 
 ## Causal Graphs
 
