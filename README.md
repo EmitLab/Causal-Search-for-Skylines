@@ -176,7 +176,9 @@ The method-comparison results can be reused across Figures 9, 11, 12, and 13. Po
 
 ### Using the Excel workbooks
 
-Open the synthetic or real-world workbook in the corresponding `figures/Figure {N}/` directory. Figure 10 contains a `Gain` worksheet. The other workbooks contain a `Summary` worksheet and supporting worksheets organized by method, number of tuples, leakage parameters, number of clusters, or causal-graph source.
+Open the synthetic or real-world workbook in the corresponding `figures/Figure {N}/` directory. Each workbook contains a `Summary` worksheet. Workbooks for figures other than Figure 10 also contain supporting worksheets organized by method, number of tuples, leakage parameters, number of clusters, or causal-graph source.
+
+To update the plots, populate the supporting worksheets with the newly generated experiment results; the `Summary` worksheet aggregates these results. For Figure 10, enter the gain computation results directly into the `Summary` worksheet.
 
 The workbooks also include dominance check results in addition to the execution time plots presented in the paper.
 
