@@ -4,7 +4,12 @@ This repository contains the implementation of Causal Search for Skylines (CSS),
 
 ## File Structure
 
-All paths below are relative to `skylines/`.
+- `skylines/`: Dataset definitions, algorithms, and experiment code, described below.
+- `configs/`: Experiment presets for the methods and parameter settings used in the paper.
+- `figures/`: Excel workbooks containing results, calculations, and charts for Figures 9–17.
+- `docker/`: Container entrypoint script for running experiments. The build and service definitions are in `Dockerfile` and `docker-compose.yml` at the repository root.
+
+Within `skylines/`:
 
 - `__init__.py`: Experiment configuration.
 - `dataset/`: Dataset definitions, including causal graphs, preference attribute sets, dominance criteria, and data-generation scripts. `synthetic/` contains synthetic datasets; `real/` contains real-world datasets and augmentation scripts. `real/data/` holds the raw, unaugmented CSV files, with tuples as rows and variables as columns.
