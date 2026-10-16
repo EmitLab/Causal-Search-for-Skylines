@@ -116,6 +116,20 @@ In order to use the `skyline` conda environment, activate it using the following
 
     conda activate skyline
 
+## Experiment Lifecycle
+
+### Setup
+
+Prepare the environment as described above and copy the desired preset from `configs/` to `skylines/__init__.py`. Check that the active `experiment_type` and parameter values match the intended experiment. If `infer_graph = True`, generate the required NOTEARS graph cache first; Docker does this automatically when the cache is empty.
+
+### Execution
+
+Run `benchmark.py`, followed immediately by `summarize.py`, for skyline experiments; run `gain.py` for gain computation experiments. The commands are provided below. Check the terminal for exceptions and confirm that the output contains results for every configured dataset, dominance setting, and repetition, plus the summary workbook after summarization. A run directory alone does not indicate successful completion.
+
+### Cleanup
+
+Previous results are retained in `out/<timestamp>/<sample-size>/` (`results/out/` on the host when using Docker). No deletion is needed to separate outputs, but finish each run and its summarization before starting another: `summarize.py` reads the run selected by `timestamp.txt`, which benchmark, gain, and graph runs overwrite. Timestamps have minute precision, so start successive runs in different minutes and verify that their output directories differ. The `graphs/` cache persists across runs; regenerate the required files when newly inferred graphs are needed.
+
 ## Experiment Setup
 
 The `configs/` folder contains presets for the following experiments:
